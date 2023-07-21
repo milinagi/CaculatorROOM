@@ -13,6 +13,10 @@ class OperationLocalDataSource(context: Context) {
         "calculator"
     ).build()
 
+    fun deleteAll() {
+        db.operationDao().deleteAll()
+    }
+
     fun getFunctionList(): List<OperationDTO> {
         return db.operationDao().getAll()
     }

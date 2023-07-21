@@ -26,4 +26,13 @@ class OperationsRepository(context: Context) {
             emit(OperationsResponse.Error(e.message ?: "Error"))
         }
     }
+
+    fun deleteAll() = flow {
+        try {
+            localDataSource.deleteAll()
+            emit(OperationsResponse.Success(listOf()))
+        } catch (e: Exception) {
+            emit(OperationsResponse.Error(e.message ?: "Error"))
+        }
+    }
 }

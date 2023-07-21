@@ -104,6 +104,26 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
             .launchIn(viewModelScope)
     }
 
+    fun deleteAll() {
+        val response = repository.deleteAll()
+        response.onEach { operationsResponse ->
+            when (operationsResponse) {
+                is OperationsResponse.Success -> {
+                    mutableStateOperation.update {
+                        it.copy(operations = operationsResponse.operations)
+                    }
+                }
+                is OperationsResponse.Error -> {
+                    mutableStateOperation.update {
+                        it.copy(error = operationsResponse.error)
+                    }
+                }
+            }
+        }
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
+    }
+
     // Appends
     fun appendOperator(operator: String) {
         if (display.text != "0" &&

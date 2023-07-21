@@ -1,5 +1,6 @@
 package com.jorgerc.caculatormvvmroom.data.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,9 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jorgerc.caculatormvvmroom.data.models.OperationDTO
 import com.jorgerc.caculatormvvmroom.data.repositories.OperationsRepository
+import com.jorgerc.caculatormvvmroom.data.responses.OperationsResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import java.util.Date
 
 class CalculatorViewModel(context: Context, private val repository: OperationsRepository = OperationsRepository(context)): ViewModel() {
@@ -20,6 +26,8 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
     var secondOperator by mutableStateOf(0.0)
     var result by mutableStateOf(0.0)
     var formattedResult by mutableStateOf("")
+    private val mutableStateOperation = MutableStateFlow(OperationViewState())
+    val operationViewState: StateFlow<OperationViewState> = mutableStateOperation
 
     // Operations
     fun calculatePercentage () {
@@ -29,6 +37,7 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
             display = TextFieldValue(result.toString())
         }
     }
+
 
     fun calculate() {
         if (display.text != "0") {
@@ -62,9 +71,9 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
 
             repository.setOperations(
                 operation = OperationDTO(
-                    id = -1,
                     operation = display.text,
-                    date = Date().time
+                    date = Date().time,
+                    operationResult = formattedResult
                 )
             )
                 .flowOn(Dispatchers.IO)
@@ -72,6 +81,27 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
 
             display = TextFieldValue(formattedResult)
         }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun getOperation() {
+        val response = repository.getOperations()
+                response.onEach { operationsResponse ->
+                    when (operationsResponse) {
+                        is OperationsResponse.Success -> {
+                            mutableStateOperation.update {
+                                it.copy(operations = operationsResponse.operations)
+                            }
+                        }
+                        is OperationsResponse.Error -> {
+                            mutableStateOperation.update {
+                                it.copy(error = operationsResponse.error)
+                            }
+                        }
+                    }
+                }
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 
     // Appends
@@ -86,6 +116,8 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
             display = TextFieldValue(display.text + operator)
         }
     }
+
+
 
     fun appendNumber(number: String) {
         display = if (display.text != "0") {
@@ -126,3 +158,8 @@ class CalculatorViewModel(context: Context, private val repository: OperationsRe
         }
     }
 }
+
+data class OperationViewState (
+    val operations: List<OperationDTO> = listOf(),
+    val error: String = ""
+        )

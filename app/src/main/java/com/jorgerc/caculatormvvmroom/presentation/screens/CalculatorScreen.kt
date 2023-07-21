@@ -1,6 +1,5 @@
 package com.jorgerc.caculatormvvmroom.presentation.screens
 
-import android.content.Context
 import androidx.navigation.NavController
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,13 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -38,9 +34,8 @@ import com.jorgerc.caculatormvvmroom.data.viewmodels.CalculatorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalculatorScreen(navController: NavController) {
-    val context = LocalContext.current
-    val viewModel by remember { mutableStateOf(CalculatorViewModel(context)) }
+fun CalculatorScreen(navController: NavController, viewModel: MutableState<CalculatorViewModel>) {
+
 
     Column(
     modifier = Modifier
@@ -62,9 +57,9 @@ fun CalculatorScreen(navController: NavController) {
         TextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = viewModel.display,
+            value = viewModel.value.display,
             onValueChange = {
-                viewModel.display = it
+                viewModel.value.display = it
             },
             textStyle = TextStyle(
                 textAlign = TextAlign.End,
@@ -97,7 +92,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.updateDisplayText()
+                        viewModel.value.updateDisplayText()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.red)
@@ -120,7 +115,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.resetCalculator()
+                        viewModel.value.resetCalculator()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.red)
@@ -141,7 +136,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.applyParenthesis()
+                        viewModel.value.applyParenthesis()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -162,7 +157,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.calculatePercentage()
+                        viewModel.value.calculatePercentage()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -183,7 +178,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendOperator(" / ")
+                        viewModel.value.appendOperator(" / ")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -206,7 +201,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("1")
+                        viewModel.value.appendNumber("1")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -227,7 +222,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("2")
+                        viewModel.value.appendNumber("2")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -248,7 +243,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("3")
+                        viewModel.value.appendNumber("3")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -269,7 +264,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendOperator(" x ")
+                        viewModel.value.appendOperator(" x ")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -292,7 +287,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("4")
+                        viewModel.value.appendNumber("4")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -313,7 +308,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("5")
+                        viewModel.value.appendNumber("5")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -334,7 +329,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("6")
+                        viewModel.value.appendNumber("6")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -355,7 +350,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendOperator(" + ")
+                        viewModel.value.appendOperator(" + ")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -378,7 +373,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("7")
+                        viewModel.value.appendNumber("7")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -399,7 +394,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("8")
+                        viewModel.value.appendNumber("8")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -420,7 +415,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("9")
+                        viewModel.value.appendNumber("9")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -441,7 +436,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendOperator(" - ")
+                        viewModel.value.appendOperator(" - ")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)
@@ -464,7 +459,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendDecimal()
+                        viewModel.value.appendDecimal()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -485,7 +480,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("0")
+                        viewModel.value.appendNumber("0")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -506,7 +501,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.appendNumber("000")
+                        viewModel.value.appendNumber("000")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.dark_blue)
@@ -527,7 +522,7 @@ fun CalculatorScreen(navController: NavController) {
                         .weight(1f)
                         .padding(horizontal = 4.dp),
                     onClick = {
-                        viewModel.calculate()
+                        viewModel.value.calculate()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.light_blue)

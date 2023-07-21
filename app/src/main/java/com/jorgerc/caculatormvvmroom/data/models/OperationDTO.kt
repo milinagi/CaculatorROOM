@@ -9,5 +9,6 @@ import java.util.Date
 data class OperationDTO (
     @PrimaryKey (autoGenerate = true) val id: Int = 0,
     @ColumnInfo val operation: String = "",
+    @ColumnInfo val operationResult: String = "",
     @ColumnInfo val date: Long = Date().time
 )
